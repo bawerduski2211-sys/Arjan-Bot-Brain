@@ -1,0 +1,6 @@
+pyTelegramBotAPI==4.26.0
+google-generativeai==0.9.0
+gTTS
+SpeechRecognition
+PyAudio
+python-dotenv
