@@ -1,23 +1,27 @@
-import google.generativeai as genai  # پیتا i بچووک کر
+import google.generativeai as genai
+import os
 
 class ArjanAI:
     def __init__(self, api_key):
-        # بکارئینانا بهێزترین مۆدێلێ نوکە یێ گوگل
+        # ڕێکخستنا کلیلێ ب ستانداردێ جیهانی
         genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('gemini-1.5-pro')
+        
+        # ب کارئینانا مۆدێلێ Flash کو خێراترینە بۆ تێلیگرامی و ئاریشەیا 404 ناهێلیت
+        self.model = genai.GenerativeModel('gemini-1.5-flash')
 
-    async def generate_response(self, user_text):
-        # سیستەمێ Streaming بۆ خێراییەکا سۆپەر
+    async def generate_response(self, prompt):
+        """
+        ئەڤ پشکە بەرسڤێ ب شێوازێ پارچە پارچە (بيت بيت) دروست دکەت
+        """
         try:
-            chat = self.model.start_chat(history=[])
-            response = chat.send_message(user_text, stream=True)
+            # چالاککرنا Streaming دا کو بۆت وەک مرۆڤی بنڤیسیت
+            response = self.model.generate_content(prompt, stream=True)
+            
+            # ڤەگوهۆستنا پارچەیێن بەرسڤێ بۆ فایلێ main.py
             for chunk in response:
                 if chunk.text:
                     yield chunk.text
+                    
         except Exception as e:
-            yield f"Error: {str(e)}"
-
-    def imagen_8k_logic(self, prompt):
-        # تەکنەلۆژییا دروستکرنا وێنەیێن Ultra 3D
-        enhanced_prompt = f"8K cinematic, ultra-realistic 3D, Duhok style, {prompt}"
-        return "arjan_output.jpg"
+            # نیشاندانا خەلەتییێ ب شێوازەکێ جوان ئەگەر ئاریشە هەبیت
+            yield f"⚠️ ببورە برا، د مێشکێ من دا ئاریشەیەک چێبوو: {str(e)}"
