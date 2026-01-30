@@ -2,3 +2,5 @@ pyTelegramBotAPI
 google-generativeai
 python-dotenv
 aiohttp
+gTTS
+speech_recognition
