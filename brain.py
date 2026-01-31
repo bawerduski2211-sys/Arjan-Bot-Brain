@@ -3,17 +3,14 @@ import asyncio
 
 class ArjanAI:
     def __init__(self, api_key):
-        # بکارئینانا کلایێنتێ نوو یێ گوگل
         self.client = genai.Client(api_key=api_key)
 
     async def generate_response(self, prompt):
         try:
-            # بکارئینانا مۆدێلا نوو 2.0 Flash
             response = self.client.models.generate_content(
                 model="gemini-2.0-flash",
                 contents=prompt
             )
-            # دابەشکرنا بەرسڤێ بۆ هندەک پارچێن بچووک (Streaming Simulation)
             words = response.text.split()
             for i in range(0, len(words), 5):
                 yield " ".join(words[i:i+5]) + " "
