@@ -1,19 +1,17 @@
-from google import genai
+import google.generativeai as genai
 import asyncio
 
-class ArjanAI:
+class arjan_engine:
     def __init__(self, api_key):
-        self.client = genai.Client(api_key=api_key)
+        genai.configure(api_key=api_key)
+        self.model = genai.GenerativeModel('gemini-1.5-flash')
 
     async def generate_response(self, prompt):
         try:
-            response = self.client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents=prompt
-            )
-            words = response.text.split()
-            for i in range(0, len(words), 5):
-                yield " ".join(words[i:i+5]) + " "
-                await asyncio.sleep(0.1)
+            response = self.model.generate_content(prompt, stream=True)
+            for chunk in response:
+                if chunk.text:
+                    yield chunk.text
+                    await asyncio.sleep(0.1)
         except Exception as e:
-            yield f"خەلەتیەک چێبوو: {str(e)}"
+            yield f"error: {str(e)}"
