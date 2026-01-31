@@ -1,7 +1,7 @@
 import google.generativeai as genai
 import asyncio
 
-class arjan_engine:
+class arjan_brain:
     def __init__(self, api_key):
         genai.configure(api_key=api_key)
         self.model = genai.GenerativeModel('gemini-1.5-flash')
