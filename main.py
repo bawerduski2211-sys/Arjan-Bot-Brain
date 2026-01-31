@@ -4,9 +4,11 @@ from telebot.async_telebot import AsyncTeleBot
 from brain import arjan_brain
 from interface import main_keyboard
 
+# Environment variables
 token = os.getenv("TELEGRAM_TOKEN")
 gemini_key = os.getenv("GEMINI_API_KEY")
 
+# Bot & AI initialization
 bot = AsyncTeleBot(token)
 ai = arjan_brain(gemini_key)
 
@@ -46,11 +48,21 @@ async def handle_buttons(message):
             full += part
         await bot.edit_message_text(full[:4000], message.chat.id, sent.message_id)
 
-# Run bot
+# Run bot function
 async def run_bot():
-    await bot.delete_webhook(drop_pending_updates=True)
-    print("🚀 Arjan Bot is Online!")
-    await bot.infinity_polling(skip_pending=True, timeout=30)
+    # پاک کردنی webhook هه‌ر update ی قدیمی
+    await bot.delete_webhook(drop_pending_updates=True)  # مهم بۆ 409 Conflict
 
+    # notification ل logs
+    print("🚀 Arjan Bot is Online!")
+
+    # infinite polling بۆ Telegram API
+    # skip_pending=True بۆ نەهێلانا updates قدیمی
+    await bot.infinity_polling(
+        skip_pending=True,
+        timeout=30
+    )
+
+# Start bot
 if __name__ == "__main__":
     asyncio.run(run_bot())
