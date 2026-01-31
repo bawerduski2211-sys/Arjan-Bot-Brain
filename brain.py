@@ -8,6 +8,7 @@ class arjan_brain:
 
     async def generate_response(self, prompt):
         try:
+            # Streaming response
             stream = self.client.models.generate_content_stream(
                 model=self.model,
                 contents=prompt
