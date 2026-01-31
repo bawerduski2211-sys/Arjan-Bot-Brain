@@ -10,12 +10,22 @@ gemini_key = os.getenv("GEMINI_API_KEY")
 bot = AsyncTeleBot(token)
 ai = arjan_brain(gemini_key)
 
+# start command
 @bot.message_handler(commands=["start"])
 async def start(message):
-    markup = main_keyboard()
-    text = "💎 arjan ai pro 2026 💎\n\nبوت بە سەركەوتووي كار دەكات 🚀"
-    await bot.send_message(message.chat.id, text, reply_markup=markup)
+    try:
+        markup = main_keyboard()
+        text = "💎 <b>arjan ai pro 2026</b> 💎\n\nبوت بە سەركەوتووي كار دەكات 🚀"
+        await bot.send_message(
+            chat_id=message.chat.id,
+            text=text,
+            reply_markup=markup,
+            parse_mode="HTML"
+        )
+    except Exception as e:
+        print("START ERROR:", e)
 
+# chat handler
 @bot.message_handler(func=lambda m: m.text and not m.text.startswith("/"))
 async def chat(message):
     sent = await bot.send_message(message.chat.id, "⚡ arjan ai دبيريت...")
@@ -26,6 +36,7 @@ async def chat(message):
 
     await bot.edit_message_text(full[:4000], message.chat.id, sent.message_id)
 
+# run bot
 async def run_bot():
     await bot.delete_webhook(drop_pending_updates=True)
     print("🚀 Arjan Bot is Online!")
